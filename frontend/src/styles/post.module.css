@@ -1,0 +1,14 @@
+.pdf_document {
+    position: relative;
+    margin: 0 auto;
+    width: 820px;
+    height: 575px;
+    
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}

@@ -1,0 +1,199 @@
+.searchBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease, z-index 0.3s ease;
+}
+
+.searchBar.open {
+    display: flex;
+    z-index: 1000;
+    opacity: 1;
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
+.container {
+    margin-top: 15vh;
+    max-width: 65vw;
+    width: 100%;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.search_form {
+    width: 100%;
+    display: flex;
+}
+
+.searchInputContainer {
+    position: relative;
+    width: 100%;
+}
+
+.search_form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #a7a1a1;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.search_form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.search_form input::placeholder {
+    color: #6c757d;
+}
+
+/* Autocomplete Suggestions */
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1001;
+}
+
+.suggestionItem {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.suggestionItem:hover,
+.suggestionItem.selected {
+    background-color: #f8f9fa;
+}
+
+.suggestionItem:last-child {
+    border-bottom: none;
+}
+
+.suggestionTitle {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.suggestionDescription {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.loadingItem {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.loadingSpinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e0e0e0;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.noResults {
+    padding: 0.75rem 1rem;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90vw;
+        padding: 1.5rem;
+    }
+    
+    .search_form input {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .suggestionItem {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .suggestionTitle {
+        font-size: 0.9rem;
+    }
+    
+    .suggestionDescription {
+        font-size: 0.8rem;
+    }
+}
+
+/* Add this to your search.module.css file */
+
+.highlight {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    padding: 0.5px 2px;
+    border-radius: 3px;
+
+}
+
+/* Alternative highlight styles you can use instead: */
+
+/* Bright yellow highlight */
+.highlight-yellow {
+    background-color: #ffff00;
+    color: #000;
+    padding: 0.1em 0.2em;
+    border-radius: 3px;
+}
+
+/* Blue highlight */
+.highlight-blue {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    padding: 0.1em 0.2em;
+    border-radius: 3px;
+    border-bottom: 2px solid #2196f3;
+}
+
+/* Simple bold highlight */
+.highlight-bold {
+    font-weight: bold;
+    color: #d32f2f;
+}

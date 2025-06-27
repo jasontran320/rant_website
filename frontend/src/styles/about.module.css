@@ -1,0 +1,29 @@
+.about_container {
+  max-width: 700px;
+  margin: 4rem auto;  /* center & spacing */
+  padding: 0 1.5rem;  /* side padding for mobile */
+  line-height: 1.7;
+  color: #333;         /* dark gray for readability */
+}
+
+.about_title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-align: center;  /* optional: center the title */
+}
+
+.about_paragraph {
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-align: justify;   /* optional: neat block of text */
+}
+
+.hero_image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}

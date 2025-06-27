@@ -1,0 +1,4 @@
+/webserver/node_modules
+.env
+/frontend/node_modules
+example.txt
