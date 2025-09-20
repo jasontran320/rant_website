@@ -1,0 +1,208 @@
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  transition: opacity 0.3s ease;
+}
+
+/* Popup Container */
+.popupContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.popup {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 75%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  animation: popupEnter 0.3s ease-out;
+}
+
+@keyframes popupEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.closeButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+}
+
+.closeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+}
+
+/* Document Container */
+.documentContainer {
+  flex: 1;
+  padding: 1.5rem;
+  background: #f9fafb;
+  overflow: hidden;
+}
+
+.documentWrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.document {
+  width: 100%;
+  max-width: 64rem;
+  height: 100%;
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0; /* top-left, top-right, bottom-right, bottom-left */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+/* Example Usage Styles */
+.exampleContainer {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.exampleTitle {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #1f2937;
+}
+
+.documentsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.documentCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.documentCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+  margin-top: 0;
+}
+
+.cardDescription {
+  color: #6b7280;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.viewButton {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.viewButton:hover {
+  background-color: #1d4ed8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .popup {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .header {
+    padding: 0.75rem;
+  }
+  
+  .documentContainer {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1rem;
+  }
+  
+  .documentsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .exampleContainer {
+    padding: 1rem;
+  }
+}

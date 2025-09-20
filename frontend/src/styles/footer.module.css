@@ -7,6 +7,7 @@
     border-top: 1px solid #e9ecef;
     bottom: 0;
     width: 100%;
+    box-sizing: border-box; /* Includes padding in width calculation */
 }
 
 @media (max-width: 768px) {

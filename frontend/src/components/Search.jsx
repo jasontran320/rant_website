@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Search({ isOpen, onToggle }) {
     const [message, setMessage] = useState("");
+    const [message2, setMessage2] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [openSuggestions, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,7 @@ export default function Search({ isOpen, onToggle }) {
             setSuggestions([]);
             setSelectedIndex(-1);
             setMessage("");
+            setMessage2("");
         }
    
         return () => {
@@ -55,9 +57,9 @@ export default function Search({ isOpen, onToggle }) {
             setIsLoading(false);
             return;
         }
-
+        
         try {
-            const response = await fetch(`http://localhost:5000/api/search?input=${encodeURIComponent(query)}`);
+            const response = await fetch(`https://rant-website.onrender.com/api/search?input=${encodeURIComponent(query)}`);
             const data = await response.json();
             
             // Cache the results
@@ -77,6 +79,7 @@ export default function Search({ isOpen, onToggle }) {
     const handleInputChange = (e) => {
         const query = e.target.value;
         setMessage(query);
+        setMessage2(query);
         setSelectedIndex(-1);
 
         // Clear existing debounce timer
@@ -120,9 +123,9 @@ export default function Search({ isOpen, onToggle }) {
             case 'Enter':
                 e.preventDefault();
                 if (selectedIndex >= 0) {
-                    handleSuggestionClick(suggestions[selectedIndex]);
+                    handleSuggestionClick(suggestions[selectedIndex]._id);
                 } else {
-                    search_function(e);
+                    handleSuggestionClick(message, 'input');
                 }
                 e.target.blur();
                 break;
@@ -133,22 +136,28 @@ export default function Search({ isOpen, onToggle }) {
         }
     };
 
-    const handleSuggestionClick = (post) => {
+    const handleSuggestionClick = (input, type='id') => {
         onToggle()
-        navigate(`/post/${post.doc_id}`);
-        setMessage(post.title);
+        navigate(`/post/${type}=${input}`); // You need to find a way to differentiate the different inputs, whether speicifcally pressed a title or entered a random phrase
+        setMessage('');
+        setMessage2('');
         setOpen(false);
         setSelectedIndex(-1);
         // Navigate to post or perform action
-        console.log('Selected post:', post);
+        console.log('Selected post:', input);
+        console.log(`Selected index: ${selectedIndex}`)
     };
 
     const search_function = (e) => {
         e.preventDefault();
-        console.log("Searching for:", message);
-        // Perform full search action
-        setSuggestions([]);
-        setSelectedIndex(-1);
+        if (message.length > 0) {
+            console.log("Searching for:", message);
+            console.log(`Selected index: ${selectedIndex}`)
+            // Perform full search action
+            setSuggestions([]);
+            setSelectedIndex(-1);
+            handleSuggestionClick(message, 'input');
+        }
     };
 
     // Clear cache when it gets too large (optional)
@@ -161,6 +170,8 @@ export default function Search({ isOpen, onToggle }) {
             setCache(newCache);
         }
     }, [cache.size]);
+
+    useEffect(() => {if (selectedIndex == -1) {setMessage(message2)} else {setMessage(suggestions[selectedIndex].title)}}, [selectedIndex])
     
 
     const useClickOutside = (ref, handler) => {
@@ -217,7 +228,7 @@ export default function Search({ isOpen, onToggle }) {
                             
                             {/* Suggestions Dropdown */}
                             {(suggestions.length > 0 || isLoading) && openSuggestions && (
-                                <div className={styles.suggestions}>
+                                <div className={styles.suggestions} onMouseLeave={() => setSelectedIndex(-1)}>
                                     {isLoading && (
                                         <div className={styles.loadingItem}>
                                             <span className={styles.loadingSpinner}></span>
@@ -231,31 +242,39 @@ export default function Search({ isOpen, onToggle }) {
                                             className={`${styles.suggestionItem} ${
                                                 selectedIndex === index ? styles.selected : ''
                                             }`}
-                                            onClick={() => handleSuggestionClick(post)}
-                                            onMouseEnter={() => setSelectedIndex(index)}
+                                            onClick={() => handleSuggestionClick(post._id)}
+                                            onMouseMove={() => {
+                                                if (selectedIndex !== index) {
+                                                    setSelectedIndex(index);
+                                                }
+                                                }}
+
                                         >
                                             <div className={styles.suggestionTitle}>
-                                                {highlightMatch(post.title, message)}
+                                                {highlightMatch(post.title, message2)}
                                             </div>
                                             {post.description && (
                                                 <div className={styles.suggestionDescription}>
                                                     {highlightMatch(
                                                         post.description.substring(0, 100) + 
                                                         (post.description.length > 100 ? '...' : ''),
-                                                        message
+                                                        message2
                                                     )}
                                                 </div>
                                             )}
                                         </div>
                                     ))}
                                     
-                                    {suggestions.length === 0 && !isLoading && message.length >= 2 && (
+                                    
+                                </div>
+
+                            )}
+
+                            {suggestions.length === 0 && !isLoading && message.length >= 2 && (
                                         <div className={styles.noResults}>
                                             No results found
                                         </div>
                                     )}
-                                </div>
-                            )}
                         </div>
                     </div>
                 </form>

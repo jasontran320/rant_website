@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const { ObjectId } = require('mongodb');
+const { escapeRegex } = require('../utils/helper');
 
 
 router.get('/home', (req, res) => {
@@ -18,17 +20,6 @@ router.get('/home', (req, res) => {
       res.status(500).json({ error: error }); // Sends a response in case of an error
     }
   });
-
-// router.get('/posts', async (req, res) => {
-//     try {
-//       const data = await Post.find();
-//       res.json({ posts: data });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ error: 'Internal Server Error' }); // Sends a response in case of an error
-//     }
-//   });
-
   
 
   router.get('/posts', async (req, res) => {
@@ -37,7 +28,7 @@ router.get('/home', (req, res) => {
       let page = req.query.page || 1;
       
       const data = await Post.aggregate([
-        { $sort: { createdAt: -1 } },
+        { $sort: { createdAt: 1 } },
       ])
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -82,13 +73,14 @@ router.get('/home', (req, res) => {
         console.log(`Searching database for: ${input}`);
         
         // Enhanced search query - searches title, content, and tags
+        
         const posts = await Post.find(
-              { title: { $regex: input, $options: 'i' } }
+            { title: { $regex: escapeRegex(input), $options: 'i' } }
         )
-        .select('title doc_id') // Only select needed fields
-        .limit(8) // Increased limit for better autocomplete
-        .sort({ createdAt: -1 }) // Most recent first
-        .lean() // Faster queries
+        .select('title doc_id')
+        .limit(8)
+        .sort({ createdAt: -1 })
+        .lean()
         .exec();
 
         // Cache the results in session (limit cache size)
@@ -113,6 +105,71 @@ router.get('/home', (req, res) => {
         });
     }
   });
+
+
+
+router.get('/search-paginated', async (req, res) => {
+    try {
+        const input = req.query.input?.trim();
+        const id = req.query.id;
+        let perPage = 10;
+        let page = req.query.page || 1;
+        
+        // Validate input
+        if ((!input //|| input.length < 2
+
+        ) && (!id)) {
+          console.log(`Hit ${input}`)
+            return res.json({ 
+                posts: [], 
+                nextPage: 1, 
+                hasNextPage: false,
+                totalCount: 0,
+                currentPage: parseInt(page),
+                searchTerm: input
+            });
+        }
+        // Build the search query
+        const searchQuery = (input) ? { 
+            title: { $regex: escapeRegex(input), $options: 'i' } 
+        } : { _id: new ObjectId(id) };
+
+        // Get paginated results using aggregation for consistency with /posts
+        const data = await Post.aggregate([
+            { $match: searchQuery },
+            { $sort: { createdAt: -1 } },
+            { $skip: perPage * page - perPage },
+            { $limit: perPage }
+        ]).exec();
+
+        // Get total count for pagination calculations
+        const count = await Post.countDocuments(searchQuery);
+        
+        // Calculate pagination info
+        const nextPage = parseInt(page) + 1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage);
+        const totalPages = Math.ceil(count / perPage);
+
+        console.log(`Paginated search for "${input ? input : id}": page ${page}/${totalPages}, found ${data.length}/${count} posts`);
+
+        res.json({ 
+            posts: data,
+            nextPage: nextPage,
+            hasNextPage: hasNextPage,
+            totalCount: count,
+            totalPages: totalPages,
+            currentPage: parseInt(page),
+            searchTerm: input
+        });
+
+    } catch (error) {
+        console.error('Paginated search error:', error);
+        res.status(500).json({
+            error: 'Paginated search failed',
+            message: error.message
+        });
+    }
+});
 
   
 module.exports = router;

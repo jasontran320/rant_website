@@ -1,6 +1,6 @@
 .about_container {
   max-width: 700px;
-  margin: 4rem auto;  /* center & spacing */
+  margin: 0rem auto;  /* center & spacing */
   padding: 0 1.5rem;  /* side padding for mobile */
   line-height: 1.7;
   color: #333;         /* dark gray for readability */
@@ -17,13 +17,16 @@
   font-size: 1.1rem;
   font-weight: 400;
   text-align: justify;   /* optional: neat block of text */
+  width: 95%;
+  margin: 20px auto 45px;
 }
 
 .hero_image {
-  max-width: 100%;
-  height: auto;
+  width: 100%; /* Make it wider */
+  height: 350px; /* Set specific height (less tall) */
   display: block;
   margin: 0 auto;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  object-fit: cover; /* This crops the image to fit the dimensions */
 }
